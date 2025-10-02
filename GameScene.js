@@ -237,23 +237,34 @@ export default class GameScene extends Phaser.Scene {
     const present = this.presents.get();
 
     if (present) {
-      // Calculate a random position on the screen
-      const x = Phaser.Math.Between(50, width - 50);
-      // Spawn low enough for the player to reach
-      const y = Phaser.Math.Between(50, 200);
+      // Calculate a random final position on the screen
+      const targetX = Phaser.Math.Between(50, width - 50);
+      const targetY = Phaser.Math.Between(50, 200);
 
-      present.enableBody(true, x, y, true, true);
+      // Start the present above the screen
+      present.enableBody(true, targetX, -50, true, true);
       present.body.setAllowGravity(false); // Make the present float
 
-      // Add a bouncing tween to the present
-      // We store the tween on the present itself so we can stop it later.
-      present.bounceTween = this.tweens.add({
+      // Stop any previous bounce tween if it exists from pooling
+      if (present.bounceTween) {
+        present.bounceTween.stop();
+        present.bounceTween = null;
+      }
+
+      // Create a tween to drop the present into place
+      this.tweens.add({
         targets: present,
-        y: y - 10, // Bounce up by 10 pixels
-        duration: 1000, // 1 second for one direction
-        ease: 'Sine.easeInOut',
-        yoyo: true,
-        repeat: -1
+        y: targetY,
+        duration: 800, // Duration of the drop
+        ease: 'Bounce.easeOut', // A nice bouncy ease
+        onComplete: () => {
+          // Once the drop is complete, start the regular bouncing animation
+          present.bounceTween = this.tweens.add({
+            targets: present,
+            y: targetY - 10, // Bounce up by 10 pixels from its final position
+            duration: 1000, ease: 'Sine.easeInOut', yoyo: true, repeat: -1
+          });
+        }
       });
     }
   }
@@ -356,7 +367,7 @@ export default class GameScene extends Phaser.Scene {
   }
   updatePowerBar() {
     // Calculate the target fill percentage based on the current score
-    const targetFill = this.score / (SETTINGS.COLLECTIBLES.TOTAL_PRESENTS * SETTINGS.COLLECTIBLES.PRESENT_SCORE);
+    const targetFill = this.score / SETTINGS.COLLECTIBLES.TOTAL_NEEDED;
 
     // Stop any existing tween to avoid conflicts
     if (this.powerBarTween) {
