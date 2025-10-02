@@ -359,7 +359,7 @@ export default class GameScene extends Phaser.Scene {
     this.presents.killAndHide(present);
     present.body.enable = false;
     this.sound.play('collectpresent', { loop: false })
-    this.score += SETTINGS.COLLECTIBLES.PRESENT_SCORE;
+    this.score += 1;
     this.updatePowerBar();
     if (this.score >= SETTINGS.COLLECTIBLES.TOTAL_NEEDED) {
       this.scene.start('GameOverScene', { won: true });
