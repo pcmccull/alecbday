@@ -130,6 +130,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   startGame() {
+    this.score = 0;
     this.sound.stopAll();
     this.sound.play('game_music', { loop: true, volume: 0.4 })
     // Now that the game is starting, resume the idle animation
