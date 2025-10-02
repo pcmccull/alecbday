@@ -228,7 +228,6 @@ export default class GameScene extends Phaser.Scene {
       this.input.addPointer(2);
       this.createMobileControls();
     }
-    this.spawnEnemy();
   }
 
  
