@@ -15,6 +15,9 @@ export default class GameOverScene extends Phaser.Scene {
     this.canRestart = false;
     const { width, height } = this.scale;
     this.sound.stopAll();
+
+    let gameOverImage;
+
     if (this.didWin) {
       // Show the win image
       numWins++;
@@ -23,15 +26,22 @@ export default class GameOverScene extends Phaser.Scene {
       } else {
         this.sound.play('win_song2', { loop: true })
       }
-      this.add.image(width / 2, height / 2, 'gameover_win').setOrigin(0.5).setScale(0.4);
+      gameOverImage = this.add.image(width / 2, -height / 2, 'gameover_win').setOrigin(0.5).setScale(0.4);
     } else {
        this.sound.play('gameover_lost', { loop: true })
-      this.add.image(width / 2, height / 2, 'gameover_lost').setOrigin(0.5).setScale(0.4);
-   
+      gameOverImage = this.add.image(width / 2, -height / 2, 'gameover_lost').setOrigin(0.5).setScale(0.4);
     }
 
+    // Add a tween to drop the image into place with a bounce
+    this.tweens.add({
+      targets: gameOverImage,
+      y: height / 2,
+      duration: 1200, // A bit longer for a dramatic effect
+      ease: 'Bounce.easeOut'
+    });
+
     
-    this.time.delayedCall(500, () => {
+    this.time.delayedCall(1400, () => {
        this.canRestart = true;
        this.add.text(width / 2, height - 100, 'Click to Play Again', {
         fontSize: '32px',
