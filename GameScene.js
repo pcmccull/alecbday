@@ -63,7 +63,7 @@ export default class GameScene extends Phaser.Scene {
     // We create the player sprite here so it's visible before the game starts.
     // It won't have physics enabled until startGame() is called.
     // Position the player to be standing on the eventual ground.
-    this.player = this.add.sprite(150, height - 170, 'player').setOrigin(0.5, 0.8);
+    this.player = this.add.sprite(150, height - 30, 'player').setOrigin(0.5, 0.8);
 
     // --- PLAYER ANIMATIONS ---
     // It's better to define animations once when the scene is created.
